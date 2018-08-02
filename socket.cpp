@@ -1,5 +1,12 @@
 #include <iostream>
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 /*
 struct sockaddr_in {
    sa_family_t    sin_family; // address family: AF_INET 

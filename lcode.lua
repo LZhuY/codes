@@ -48,3 +48,7 @@ fourSum1(result, {1,0,-1,0,-2,2}, 0)
 for k,v in pairs(result) do 
 	print(table.concat(v, " "))
 end
+
+function judgetwolisthascyc(l1, l2){
+	
+}

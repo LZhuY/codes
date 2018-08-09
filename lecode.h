@@ -901,4 +901,58 @@ public:
 			right = isnormaltree_xx_1(t->right);
 		return left && right;
 	}
+
+
+	bool ismirtree_xx_1(TNode* t){
+		vector<TNode*> tnodes(1,t);
+		vector<TNode*> tmptnodes;
+		while( !tnodes.empty() ){
+			tmptnodes.clear();
+			for(auto iter=tnodes.begin(); iter!=tnodes.end(); iter++){
+				tmptnodes.push_back( *iter->val );
+				int left = 0, right = tmptnodes.size()-1;
+				while(left < right){
+					if(tmptnodes[left]->val != tmptnodes[right]->val)
+						return false;
+					left++;
+					right--;
+				}
+				tmptnodes.clear();
+				for(auto iter=tnodes.begin(); iter!=tnodes.end(); iter++){
+					if(*iter->left == NULL && *iter->right == NULL)
+						continue;
+
+					if(*iter->left != NULL && *iter->right != NULL){
+						tmptnodes.push_back( *iter->left );
+						tmptnodes.push_back( *iter->right );
+						continue;
+					}
+					return false;
+				}
+			}
+			tnodes = tmptnodes;
+		}
+		return true;
+	}
+
+	vector<vector<int>> leveltravel_xx_1(TNode* t){
+		vector<TNode*> nodes(1, t);
+		vector<vector<int>> results;
+		while( !nodes.empty() ){
+			vector<TNode*> tmpnodes;
+			vector<int> levelResult;
+			for(auto iter=nodes.begin(); iter!=nodes.end(); iter++){
+				levelResult.push_back(*iter->val);
+
+				if(*iter->left != NULL)
+					tmpnodes.push_back(*iter->left);
+				if(*iter->right != NULL)
+					tmpnodes.push_back(*iter->right);
+			}
+			if(!levelResult.empty())
+				results.push_back(levelResult);
+			nodes = tmpnodes;
+		}
+		return results;
+	}
 }

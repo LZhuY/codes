@@ -113,20 +113,19 @@ public:
 	}
 
 	int findLengthOfLCIS_485(vector<int>& nums){
-		int maxCnt = 0;
-		int cnt = 0;
-		for(int i=0; i<nums.size(); i++){
-			if(nums[i] == 1)
-				cnt++;
-			else{
-				if(cnt > maxCnt)
-					maxCnt = cnt;
-				cnt=0;
+		int sz = nums.size();
+		if(sz == 0 || sz == 1)
+			return sz;
+		vector<int> tmpLengths(sz, 1);
+		for(int i=1; i<sz; i++){
+			for(int j=i-1; j>=0; j++){
+				if(nums[i] > nums[j]){
+					tmpLengths[i] = tmpLengths[j]+1;
+					break;
+				}
 			}
 		}
-		if(cnt > maxCnt)
-			maxCnt = cnt;
-		return maxCnt;
+		return tmpLengths[sz-1];
 	}
 
 	int minCostClimbingStairs_746_1(vector<int>& cost){
@@ -549,6 +548,16 @@ public:
 		return profit;
 	}
 
+	int maxProfit_xx_1(vector<int>& prices){
+		int minVal = INT_MAX;
+		int maxProfit = 0;
+		for(int i=0; i<prices.size(); i++){
+			maxProfit = max( prices[i]-minVal, maxProfit );
+			minVal = min(minVal, prices[i]);
+		}
+		return maxProfit;
+	}
+
 	void rotate_xx_array_1(vector<int>& nums, int k){
 		for(int i=0; i<k; i++){
 			int v = nums.back();
@@ -742,7 +751,7 @@ public:
 	}
 
 
-	void removeNthfromEnd_xx_1(ListNode* node, int n){
+	ListNode* removeNthfromEnd_xx_1(ListNode* node, int n){
 		vector<ListNode*> nodes(n, NULL);
 		ListNode* tmpNode = node;
 		while(tmpNode != NULL){
@@ -750,7 +759,7 @@ public:
 			tmpNode = tmpNode->next;
 		}
 		if(nodes.size() < n)
-			return;
+			return node;
 		auto node2Remove = nodes.end()-n;
 		if( node2Remove == nodes.begin()){
 			node = node->next;
@@ -758,6 +767,7 @@ public:
 			auto beforeNode2Remove = node2Remove-1;
 			(*beforeNode2Remove)->next = (*node2Remove)->next;
 		}
+		return node;
 	}
 
 	ListNode* reverseListNode_xx_1(ListNode* head){
@@ -826,10 +836,24 @@ public:
 			}
 		}
 
-		if(l1 != NULL)
-			tmpHead->next = l1;
-		else if(l2 != NULL)
-			tmpHead->next = l2;
+		if(l1 != NULL){
+			if(tmpHead != NULL){
+				tmpHead->next = l1;
+			}else{
+				tmpHead = l1;
+				head = tmpHead;
+			}
+		}
+
+		if(l2 != NULL){
+			if(tmpHead != NULL){
+				tmpHead->next = l2;
+			}else{
+				tmpHead = l2;
+				head = tmpHead;
+			}
+		}
+
 		return head;
 	}
 
@@ -847,23 +871,25 @@ public:
 		while( left < right ){
 			if( nums[left] != nums[right] )
 				return false;
+			left++;
+			right--;
 		}
 		return true;
 	}
 
-	bool istwolisthascyc_xx_1(ListNode* head1, ListNode* head2){
-		ListNode* p1 = head1, *p2 = head2;
+	bool istwolisthascyc_xx_1(ListNode* head){
+		ListNode* p1 = head, *p2 = head;
 		for(int i=0; i<100000000; i++){
 			for(int j=0; j<3; j++){
-				p1 = p1->next;
 				if(p1 == NULL)
 					return false;
+				p1 = p1->next;
 			}
 
-			p2 = p2->next;
-			if(p2 == NULL){
+			if(p2 == NULL || p1 == NULL){
 				return false;
 			}
+			p2 = p2->next;
 			if(p1 == p2)
 				return true;
 		}
@@ -874,7 +900,7 @@ public:
 	int maxdeeptree_xx_1(TNode* t){
 		if(t == NULL)
 			return 0;
-		int md = maxdeeptree_xx_1_help(t)-1;
+		int md = maxdeeptree_xx_1_help(t);
 		return md;
 	}
 
@@ -888,12 +914,14 @@ public:
 		return max(left, right)+1;
 	}
 
-	bool isnormaltree_xx_1(TNode* t){
+	bool isValidBST_xx_1(TNode* t, int rootVal){
+		if(t == NULL)
+			return true;
 		int val = t->val;
-		if(t->left && t->right){
-			if( val < t->left->val || val > t->right->val )
-				return false;
-		}
+		if(t->left && val <= t->left->val)
+			return false;
+		if(t->right && val >= t->right->val)
+			return false;
 		bool left = true, right = true;
 		if( t->left )
 			left = isnormaltree_xx_1(t->left);
@@ -904,32 +932,34 @@ public:
 
 
 	bool ismirtree_xx_1(TNode* t){
-		vector<TNode*> tnodes(1,t);
+		vector<TNode*> tnodes(1, t);
 		vector<TNode*> tmptnodes;
 		while( !tnodes.empty() ){
 			tmptnodes.clear();
 			for(auto iter=tnodes.begin(); iter!=tnodes.end(); iter++){
-				tmptnodes.push_back( *iter->val );
-				int left = 0, right = tmptnodes.size()-1;
-				while(left < right){
-					if(tmptnodes[left]->val != tmptnodes[right]->val)
-						return false;
-					left++;
-					right--;
-				}
-				tmptnodes.clear();
-				for(auto iter=tnodes.begin(); iter!=tnodes.end(); iter++){
-					if(*iter->left == NULL && *iter->right == NULL)
-						continue;
-
-					if(*iter->left != NULL && *iter->right != NULL){
-						tmptnodes.push_back( *iter->left );
-						tmptnodes.push_back( *iter->right );
-						continue;
-					}
-					return false;
-				}
+				tmptnodes.push_back( *iter );
 			}
+
+			int left = 0, right = tmptnodes.size()-1;
+			while(left < right){
+				if(tmptnodes[left]->val != tmptnodes[right]->val)
+					return false;
+				left++;
+				right--;
+			}
+			tmptnodes.clear();
+			for(auto iter=tnodes.begin(); iter!=tnodes.end(); iter++){
+				if( (*iter)->left == NULL && (*iter)->right == NULL)
+					continue;
+
+				if( (*iter)->left != NULL && (*iter)->right != NULL){
+					tmptnodes.push_back( (*iter)->left );
+					tmptnodes.push_back( (*iter)->right );
+					continue;
+				}
+				return false;
+			}
+
 			tnodes = tmptnodes;
 		}
 		return true;
@@ -942,12 +972,12 @@ public:
 			vector<TNode*> tmpnodes;
 			vector<int> levelResult;
 			for(auto iter=nodes.begin(); iter!=nodes.end(); iter++){
-				levelResult.push_back(*iter->val);
+				levelResult.push_back( (*iter)->val);
 
-				if(*iter->left != NULL)
-					tmpnodes.push_back(*iter->left);
-				if(*iter->right != NULL)
-					tmpnodes.push_back(*iter->right);
+				if( (*iter)->left != NULL)
+					tmpnodes.push_back( (*iter)->left);
+				if( (*iter)->right != NULL)
+					tmpnodes.push_back( (*iter)->right);
 			}
 			if(!levelResult.empty())
 				results.push_back(levelResult);
@@ -955,4 +985,88 @@ public:
 		}
 		return results;
 	}
+
+	bool canJump_xx_1(vector<int>& nums){
+		vector<vector<int> maps(nums.size(), vector<int>(nums.size(), -1));
+		maps[0][0] = 1;
+		for(int i=0; i<nums.size(); i++){
+			int val = nums[i];
+			for(int j=i; j<nums.size(); j++){
+				if(maps[i][j] == -1)
+					break;
+				if(val >= j-i)
+					maps[i][j] = 1;
+			}
+		}
+		return maps[nums.size()-1][nums.size()-1] == 1
+	}
+
+	int ccpx(int i){
+		int result = 1;
+		for(int j=1; j<=i; j++)
+			result *= j;
+		return result;
+	}
+
+	int uniqPath_xx_1(int m, int n){
+		int maxVal = max(m,n);
+		maxVal ++;
+		int minVal = min(m,n);
+		return ccpx(maxVal)/(ccpx(min)*ccpx(maxVal-minVal)) ;
+	}
+
+	int uniqPath_xx_2(int m, int n){
+		int[][] nums = new int[m][n];
+        for (int i = 0 ;i < m;i++) {
+            for (int j = 0; j < n; j++) {
+                if(i == 0 || j == 0)
+                    nums[i][j] = 1;
+                else
+                    nums[i][j] = nums[i - 1][j] + nums[i][j - 1];
+            }
+        }
+        return nums[m - 1][n - 1];
+	}
+
+	int coinChange_xx_1(vector<int>& nums, int target){
+		int arr[target] = {target}, arr[0] = 1;
+		for(int i=0; i<target; i++){
+			for(auto iter=nums.begin(); iter!=nums.end(); iter++){
+					arr[i+(*iter)] = min(arr[i+(*iter)], arr[i]+1 );
+			}
+		}
+		return arr[target] >= target ? -1 : arr[target];
+	}
+
+	int climbStairs(int n) {
+		vector<int> arr(n+1, 0);
+		arr[0]=0, arr[1]=1, arr[2]=2;
+		for(int i=3; i<=n; i++)
+			arr[i] = arr[i-1]+arr[i-2];
+		return arr[n];
+    }
+
+    int maxsubarray_xx_1(vector<int>& nums) {
+		int maxSun = INT_MIN;
+		int tmpSun = 0;
+		for(int i=0; i<nums.size(); i++){
+			tmpSun += nums[i];
+			maxSun = max(maxSun, tmpSun);
+			if(tmpSun <= 0)
+				tmpSun = 0;
+		}
+		return maxSun;
+    }
+
+    int rob_xx_1(vector<int> nums){
+		int sz = nums.size();
+		if(sz == 0)
+			return 0;
+		vector<int> vals(sz*2, 0);
+		for(int i=0; i<sz; i++){
+			vals[i*2] =  i == 0 ? 0 : max(vals[(i-1)*2], vals[(i-1)*2+1]);
+			vals[i*2+1] = i == 0 ? nums[i] : nums[i]+vals[(i-1)*2];
+		}
+		return max(vals[(sz-1)*2], vals[(sz-1)*2+1]);
+    }
 }

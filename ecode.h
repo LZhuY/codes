@@ -1530,4 +1530,158 @@ public:
 			}
 		}
 	}
+
+	vector<string> matchpatter_xx_1(vector<string> strs, string patter){
+		vector<string> result;
+		int pattersz = patter.size();
+		for(int i=0; i<strs.size(); i++){
+			string tmpstr = strs[i];
+			map<char, char> charmap1;
+			map<char, char> charmap2;
+			if(tmpstr.size() != pattersz)
+				continue;
+
+			bool match = true;
+			for(int j=0; j<patter.size(); j++){
+				char c1 = tmpstr[j];
+				char c2 = patter[j];
+				if( charmap1.find(c1) == charmap1.end() && charmap2.find(c2) == charmap2.end() ){
+					charmap1[c1] = c2;
+					charmap2[c2] = c1;
+				}else if(charmap1.find(c1) != charmap1.end() && charmap2.find(c2) != charmap2.end()){
+					if(charmap1[c1] != c2 || c1 != charmap2[c2]){
+						match = false;
+						break;
+					}
+				}else{
+					match = false;
+					break;
+				}
+			}
+			if(match)
+				result.push_back(tmpstr);
+		}
+		return result;
+	}
+
+	vector<int> exchangecandi_xx_1(vector<int>& nums1, vector<int>& nums2){
+		int total = 0, sum1=0, sum2=0;
+		for(auto iter=nums1.begin(); iter!=nums1.end(); iter++){
+			total += (*iter);
+			sum1 += (*iter);
+		}
+
+		for(auto iter=nums2.begin(); iter!=nums2.end(); iter++ ){
+			total += (*iter);
+			sum2 += (*iter);
+		}
+
+		vector<int> result(2,0);
+		if(sum1 == sum2)
+			return result;
+
+		int avg = total/2;
+		int targe1 = sum1-avg, target2 = sum2-avg;
+		for(int i=0; i<nums1.size(); i++){
+			for(int j=0; j<nums2.size(); j++){
+				if( nums1[i]-nums2[j] == targe1 ){
+					result[0] = nums1[i], result[1] = nums2[j];
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+
+	void treeinserthelp(TNode* t, int v){			
+		if(t->val > v){
+			if(t->left == NULL)
+				t->left = new TNode(v);
+			else
+				treeinserthelp(t->left, v);
+		}else{
+			if(t->right == NULL)
+				t->right = new TNode(v);
+			else
+				treeinserthelp(t->right, v);
+		}
+	}
+
+	TNode* buildBindTree(vector<int>& nums){
+		TNode* root = NULL;
+		for(int i=0; i<nums.size(); i++){
+			if(root == NULL){
+				root = new TNode(nums[i]);
+				continue;
+			}
+			treeinserthelp(root, nums[i]);
+		}
+		return root;
+	}
+
+	void kthsmallitem_help(vector<int>& nums, TNode* t){
+		if(nums.size() >= 3)
+			return;
+
+		if(t->left)
+			kthsmallitem_help(nums, t->left);
+		
+		nums.push_back(t->val);
+
+		if(t->right)
+			kthsmallitem_help(nums, t->right);
+
+	}
+
+	int kthsmallitem_tree_x_1(TNode* t){
+		vector<int> nums;
+		kthsmallitem_help(nums, t);
+		return nums[2];
+	}
+
+	int numIslands_xx_1(vector<vector<char>>& grid){
+		struct Point{
+			int x;
+			int y;
+			Point(int x_, int y_):x(x_),y(y_){}
+			Point(Point& rhs){ x=rhs.x; y=rhs.y; }
+		};
+
+		int row = grid.size();
+		if(row == 0)
+			return 0;
+		int cow = grid[0].size();
+		if(cow == 0)
+			return 0;
+
+		vector<Point> lrud(4, Point(0,0));
+		lrud[0].x = 0, lrud[0].y=-1, lrud[1].x=0, lrud[1].y=1;
+		lrud[2].x = -1, lrud[2].y=0, lrud[3].x=1, lrud[3].y=0;
+
+		int landino = 2;
+		for(int i=0; i<row; i++){
+			for(int j=0; j<cow; j++){
+				if(grid[i][j] == 1){
+					stack<Point> tack;
+					tack.push(Point(i,j));
+					while(!tack.empty()){
+						Point p = tack.top();
+						tack.pop();
+						grid[p.x][p.y] = landino;
+						for(auto dir=lrud.begin(); dir!=lrud.end(); dir++){
+							int tmpx = p.x+(*dir).x , tmpy = p.y+(*dir).y;
+							if( tmpx >=0 && tmpx < row && tmpy >= 0 && tmpy < cow ){
+								if(grid[tmpx][tmpy] == 1){
+									tack.push( Point(tmpx, tmpy) );
+								}
+							}
+						}
+					}
+					landino++;
+				}
+			}
+		}
+		 return landino-2;
+	}
 }

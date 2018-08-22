@@ -1069,4 +1069,465 @@ public:
 		}
 		return max(vals[(sz-1)*2], vals[(sz-1)*2+1]);
     }
+
+	int maxproduce_xx_1(vector<int>& nums){
+		int tmpVal1=1, tmpVal2=1, maxVal = INT_MIN;
+		for(int i=0; i<nums.size(); i++){
+			tmpVal1 *= nums[i];
+			tmpVal2 *= nums[i];
+
+			maxVal = max(maxVal, tmpVal1);
+			maxVal = max(maxVal, tmpVal2);
+
+			if(tmpVal1 == 0)
+				tmpVal1 = 1;
+			if(tmpVal2 <= 0)
+				tmpVal2 = 1;
+		}
+		return maxVal;
+	}
+
+	vector<vector<int>> threesum_xx_1(vector<int>& nums){
+		vector<vector<int>> result;
+		int sz = nums.size();
+		if(sz < 3)
+			return result;
+		sort(nums.begin(), nums.end());
+		for(int i=0; i<sz; ){
+			if( (i+1) < sz && nums[i] == nums[i+1]){
+				i++;
+				continue;
+			}
+			int target = -nums[i];
+			int left = i+1;
+			int right = sz-1;
+			while( left < right ){
+				while( (left+1) < right && nums[left] == nums[left+1] ) left++;
+				while( (right-1) > left && nums[right] == nums[right-1]) right--;
+				if(left >= right)
+					break;
+				if(nums[left]+nums[right] == target){
+					int arr[3] = {target*-1, nums[left], nums[right]};
+					result.push_back(vector<int>(arr, arr+3));
+					left++; right--;
+				}else if(nums[left]+nums[right] < target){
+					left++;
+				}else
+					right--;
+			}
+		}
+		return result;
+	}
+
+	void setzeroes_xx_1(vector<vector<int>>& matrix){
+		int row = matrix.size();
+		if(row == 0)
+			return;
+		int cow = matrix[0].size();
+
+		vector<int> rowNeed2SetZero(row, 0);
+		vector<int> cowNeed2SetZero(cow, 0);
+		for(int i=0; i<row; i++){
+			for(int j=0; j<cow; j++){
+				if( matrix[i][j] == 0 ){
+					rowNeed2SetZero[i] = 1;
+					cowNeed2SetZero[j] = 1;
+				} 
+			}
+		}
+
+		for(int i=0; i<row; i++){
+			if( rowNeed2SetZero[i] == 1 ){
+				for(int j=0; j<cow; j++)
+					matrix[i][j] = 0;
+			}
+		}
+
+		for(int j=0; j<cow; j++){
+			if( cowNeed2SetZero[j] == 1 ){
+				for(int i=0; i<row; i++)
+					matrix[i][j] = 0;
+			}
+		}
+	}
+
+	int getgroupkey(string str){
+		int key = 0;
+		for(int i=0; i<str.size(); i++)
+			key += str[i];
+		return key;
+	}
+
+	vector<vector<string>> groupaabbcc_xx_1(vector<string>& strs){
+		map<string, vector<string>> strmap;
+		map<string, map<char, int>> strhash;
+		for(int i=0; i<strs.size(); i++){
+			string str = strs[i];
+
+			map<char, int> tmpMap;
+			for(int j=0; j<str.size(); j++){
+				tmpMap[str[j]]++;
+			}
+
+			if( i == 0 ){
+				vector<string> tmpvec(1, str);
+				strmap.insert( std::pair<string, vector<string>>(str, tmpvec) );
+				strhash.insert( std::pair<string, map<char,int>>(str, tmpMap) );
+				continue;
+			}
+
+			bool tmpMatch = true;
+			for(auto iter=strhash.begin(); iter!=strhash.end(); iter++){
+				map<char, int>& tmpHash = iter->second;
+				if(tmpHash.size() != tmpMap.size()){
+					tmpMatch = false;
+					continue;
+				}
+
+				tmpMatch = true;
+				for(auto citer=tmpMap.begin(); citer!=tmpMap.end(); citer++){
+					char c = citer->first;
+					int cnt = citer->second;
+					if( tmpHash[c] != cnt ){
+						tmpMatch = false;
+						break;
+					}
+				}
+
+				if(tmpMatch){
+					strmap[iter->first].push_back(str);
+					break;
+				}
+			}
+			if(!tmpMatch){
+				vector<string> tmpvec(1, str);
+				strmap.insert( std::pair<string, vector<string>>(str, tmpvec) );
+				strhash.insert( std::pair<string, map<char,int>>(str, tmpMap) );
+			}
+		}
+		vector<vector<string>> result;
+		for(auto iter=strmap.begin(); iter!=strmap.end(); iter++){
+			result.push_back( iter->second );
+		}
+		return result;
+	}
+
+	string noreplacesubstr_xx_1(string str){
+		int maxLen = 0;
+		int tmpLen = 0;
+		map<char, int> charmap;
+		for(int i=0; i<str.size(); ){
+			char c = str[i];
+			if(charmap[c] != 0){
+				maxLen = max(maxLen, tmpLen);
+				tmpLen = i - charmap[c]-1;
+				i = charmap[c]+1;
+				charmap.clear();
+			}else{
+				charmap[c] = i;
+				tmpLen++;
+				i++;
+			}
+		}
+		maxLen = max(maxLen, tmpLen);
+		return maxLen;
+	}
+
+	int getstrhashcode(string str){
+		int arr1[26] = {101,123,456,1000,4567,908,79,3888,12222,5667,2342,8090,6789,6123,43,1,2999,8126,44444,88888,99999,1111,2222,3333,66,88};
+		//int arr2[26] = {100000,4563,97878,8667,453434,9808,12,5683,1242,5684,235423,80190,656789,896,457,1989,12999,18126,144444,188888,199999,21111,12222,13333,166,188};
+		int code = 0;
+		code += str.size()*1000000;
+		for(int i=0; i<str.size(); i++){
+			code += arr1[str[i]-'a'];
+			//code += arr2[str[i]-'a']
+		}
+		return code;
+	}
+
+	vector<vector<string>> groupstrhash_xx_1(vector<string>& strs){
+		map<int, vector<string>> strmap;
+		map<int, map<int, int>> hashmap; 
+		for(int i=0; i<strs.size(); i++){
+			strmap[getstrhashcode(strs[i])].push_back(strs[i]);
+		}
+		vector<vector<string>> result;
+		for(auto iter=strmap.begin(); iter!=strmap.end(); iter++){
+			result.push_back(iter->second);
+		}
+		return result;
+	}
+
+	int lengthoflongestsubstr_xx_1(string str){
+		map<char, int> charmap;
+		int tmplen = 0;
+		int maxlen = 0;
+		for(int i=0; i<str.size(); ){
+			char c = str[i];
+			int idx = charmap[c];
+			if(idx == 0){
+				tmpLen ++;
+				maxLen = max(maxLen, tmpLen);
+				charmap[str[i]] = i;
+				i++;
+			}else{
+				tmpLen = 0;
+				i = idx+1;
+				charmap.clear();
+			}
+		}
+		return maxLen;
+	}
+
+	string longgestpaling_xx_1(string str){
+		int maxLen = 0, tmpLen = 1, sz = str.size();
+		int m = sz/2;
+		for(int i=m; i<sz; i++){
+			int left = i-1, right = i+1;
+			if( (sz-i)*2+1 <= maxLen )
+				break;
+			while( right < sz ){
+				if(str[left] == str[right]){
+					tmpLen += 2;
+					left--;
+					right++;
+				}else
+					break;
+			}
+			maxLen = max(maxLen, tmpLen);
+			tmpLen = 1;
+		}
+
+		for(int i=m-1; i>0; i--){
+			int left = i-1, right = i+1;
+			if( (i-1)*2+1 <= maxLen)
+				break;
+			while( left >=0 ){
+				if( str[left] == str[right] ){
+					tmpLen+=2;
+					left--;
+					right++;
+				}else
+					break;
+			}
+			maxLen = max(maxLen, tmpLen);
+			tmpLen = 1;
+		}
+		return maxLen;
+	}
+
+
+	bool increasingTriplet_xx_1(vector<int>& nums){
+		int m1=INT_MAX, m2=INT_MAX;
+		for(int i=0; i<nums.size(); i++){
+			if(m1 > nums[i])
+				m1 = nums[i];
+			else{
+				if(m2>nums[i])
+					m2=nums[i];
+				else
+					return true;
+			}
+		}
+		return false;
+	}
+
+	ListNode* addtxwonumber_xx_1(ListNode* l1, ListNode* l2){
+		ListNode* tail = new ListNode(0);
+		vector<ListNode*> vl1;
+		vector<ListNode*> vl2;
+
+		while( l1 != NULL ){
+			vl1.push_back(l1);
+			l1 = l1->next;
+		}
+		while( l2 != NULL ){
+			vl2.push_back(l2);
+			l2 = l2->next;
+		}
+
+		int up = 0;
+		int sz1 = vl1.size()-1;
+		int sz2 = vl2.size()-1;
+		while( sz1 >= 0 && sz2 >= 0 ){
+			int val = vl1[sz1]->val + vl2[sz2]->val+up;
+			up = int(val/10);
+			val = val % 10;
+			tail->val = val;
+			ListNode* tmp = new ListNode(0);
+			tmp->next = tail;
+			tail = tmp;
+			sz1 --;
+			sz2 --;
+		}
+
+		while( sz1 >= 0 ){
+			int val = vl1[sz1]->val + up;
+			up = int(val/10);
+			val = val % 10;
+			tail->val = val;
+			ListNode* tmp = new ListNode(0);
+			tmp->next = tail;
+			tail = tmp;
+			sz1--;
+		}
+
+		while( sz2 >= 0 ){
+			int val = vl2[sz2]->val + up;
+			up = int(val/10);
+			val = val % 10;
+			tail->val = val;
+			ListNode* tmp = new ListNode(0);
+			tmp->next = tail;
+			tail = tmp;
+			sz2--;
+		}
+		if(tail->val ==0)
+			tail = tail->next;
+		if(up > 0){
+			ListNode* tmp = new ListNode(up);
+			tmp->next = tail;
+			tail = tmp;
+		}
+		return tail;
+	}
+
+	ListNode* oddEventList_xx_1(ListNode* list){
+		vector<ListNode*> l1;
+		vector<ListNode*> l2;
+
+		ListNode* tmp = list;
+		while( tmp){
+			l1.push_back(tmp);
+			tmp = tmp->next;
+			if( tmp )
+				tmp = tmp->next;
+			else
+				break;
+		}
+		tmp = list->next;
+		if(tmp == NULL)
+			return list;
+		while(tmp){
+			l2.push_back(tmp);
+			tmp = tmp->next;
+			if(tmp)
+				tmp = tmp->next;
+			else
+				break;
+		}
+
+		for(auto ptr=l1.begin(); ptr!=l1.end(); ptr++){
+			(*ptr)->next = NULL;
+		}
+
+		for(auto ptr=l2.begin(); ptr!=l2.end(); ptr++){
+			(*ptr)->next = NULL;
+		}
+
+
+		for(int i=1; i<l1.size(); i++){
+			l1[i-1]->next = l1[i];
+		}
+
+		for(int i=1; i<l2.size(); i++){
+			l2[i-1]->next = l2[i];
+		}
+		l1[l1.size()-1]->next = l2[0];
+		return list;
+	}
+
+	ListNode* sameptr_xx_1(ListNode* l1, ListNode* l2){
+		int len1 = 0, len2 = 0;
+		ListNode* tmp1 = l1, *tmp2 = l2;
+		while( tmp1 ){
+			len1 ++;
+			tmp1 = tmp1->next;
+		}
+
+		while( tmp2 ){
+			len2 ++;
+			tmp2 = tmp2->next;
+		}
+
+		if(len1 > len2)
+			len1 = len1-len2;
+		else if (len2 > len1)
+			len2 = len2-len1;
+		else{
+			len2=0, len1=0;
+		}
+
+
+		tmp1=l1, tmp2=l2;
+		while( len1 > 0 ){
+			tmp1=tmp1->next;
+			len1--;
+		}
+		while(len2>0){
+			tmp2 = tmp2->next;
+			len2--;
+		}
+
+		while( tmp1 && tmp2 ){
+			if(tmp1 == tmp2)
+				return tmp1;
+			tmp1 = tmp1->next;
+			tmp2 = tmp2->next;
+		}
+		return NULL;
+	}
+
+	vector<int> inordertraveral_xx_tree_1(TNode* t){
+		vector<int> result;
+		if(t == NULL)
+			return result;
+		inordertraveral_help(nums, t);
+		return result;
+	}
+
+	void inordertraveral_help(vector<int>& nums, TNode* t){
+		nums.push_back( t->val );
+		if( t->left )
+			inordertraveral_help(nums, t->left);
+		if( t->right )
+			inordertraveral_help(nums, t->right);
+	}
+
+	vector<int> zordertraval_tree_1(TNode* t){
+		vector<int> result;
+		vector<TNode*> level1(1,t);
+		vector<TNode*> level2;
+		int dir = 1;
+
+		while(true){
+			if( dir  == 1){
+				level2.clear();
+				for(auto iter=level1.begin(); iter!=level1.end(); iter++){
+					result.push_back( (*iter)->val );
+					if( (*iter)->left )
+						level2.push_back( (*iter)->left);
+
+					if( (*iter)->right )
+						level2.push_back( (*iter)->right );
+				}
+				if(level2.empty())
+					break;
+				dir = 2;
+			}else{
+				level1.clear();
+				for(int j=level2.size()-1; j>=0; j--){
+					TNode* ptr = level2[j];
+					result.push_back( ptr->val );
+					if( ptr->right )
+						level1.push_back(ptr->right);
+					if(ptr->left)
+						level1.push_back(ptr->left);
+				}
+				if(level1.empty())
+					break;
+				dir = 1;
+			}
+		}
+	}
 }

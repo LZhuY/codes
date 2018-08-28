@@ -121,4 +121,14 @@ public:
 		}
 		return maxLen;
 	}
+
+	int rangeSum_xx303(vector<int>& nums, int l, int r){
+		vector<int> sums(nums.size(), 0);
+		for(int i=0; i<nums.size(); i++){
+			sums[i] = i == 0 ? nums[i] : nums[i]+sums[i-1];
+		}
+		return sums[r]-(l>0?s[l-1]:0);
+	}
+
+
 };

@@ -129,9 +129,22 @@ public:
 	}
 
 	int integerBreakerxx343(int n){
-		vector<int> maxm (n+1, 0);
-		for(int i=2; i<=n; i++){
-			maxm[i] = maxm[i];
+		vector<int> maxm(n+10, 0);
+		maxm[0]=0, maxm[1]=0, maxm[2]=2, maxm[3]=3, maxm[4]=4, maxm[5]=6, maxm[6]=9, maxm[7]=12, maxm[8]=18;
+		if(n==2)
+			return 1;
+		if(n==3)
+			return 2;
+		if(n<=8)
+			return maxm[n];
+		for(int i=8; i<=n; i++){
+			int m = i/2;
+			for(int j=2; j<=m; j++){
+				int other = i-j;
+				int sum = maxm[other]*maxm[j];
+				maxm[i] = max(maxm[i], sum);
+			}
 		}
+		return maxm[n];
 	}
 };

@@ -1070,23 +1070,6 @@ public:
 		return max(vals[(sz-1)*2], vals[(sz-1)*2+1]);
     }
 
-	int maxproduce_xx_1(vector<int>& nums){
-		int tmpVal1=1, tmpVal2=1, maxVal = INT_MIN;
-		for(int i=0; i<nums.size(); i++){
-			tmpVal1 *= nums[i];
-			tmpVal2 *= nums[i];
-
-			maxVal = max(maxVal, tmpVal1);
-			maxVal = max(maxVal, tmpVal2);
-
-			if(tmpVal1 == 0)
-				tmpVal1 = 1;
-			if(tmpVal2 <= 0)
-				tmpVal2 = 1;
-		}
-		return maxVal;
-	}
-
 	vector<vector<int>> threesum_xx_1(vector<int>& nums){
 		vector<vector<int>> result;
 		int sz = nums.size();
@@ -1683,5 +1666,118 @@ public:
 			}
 		}
 		 return landino-2;
+	}
+
+	vector<int> exchangecandi_xx_2(vector<int>& nums1, vector<int>& nums2){
+		int sum1=0, sum2=0;
+		for(auto iter=nums1.begin(); iter!=nums1.end(); iter++){
+			sum1 += (*iter);
+		}
+
+		for(auto iter=nums2.begin(); iter!=nums2.end(); iter++ ){
+			sum2 += (*iter);
+		}
+
+		vector<int> result(2,0);
+		if(sum1 == sum2)
+			return result;
+
+		int target = (sum1-sum2)/2;
+
+		sort(nums1.begin(), nums1.end());
+		sort(nums2.begin(), nums2.end());
+
+		if(target > 0){
+			int maxIdx=nums1.size()-1, minIdx=0;
+			while( maxIdx >= 0 && minIdx < nums2.size() ){
+				int diff = nums1[maxIdx]-nums2[minIdx];
+				if(diff == target){
+					result[0]=nums1[maxIdx], result[1]=nums2[minIdx];
+					break;
+				}else if(diff > target){
+					maxIdx--;
+				}else{
+					minIdx++;
+				}
+			}
+		}else{
+			target *= -1;
+			int maxIdx=nums2.size()-1, minIdx=0;
+			while( maxIdx >= 0 && minIdx < nums1.size() ){
+				int diff = nums2[maxIdx]- nums1[minIdx];
+				if( diff == target ){
+					result[0]=nums1[minIdx], result[1]=nums2[maxIdx];
+					break;
+				}else if( diff > target ){
+					maxIdx--;
+				}else{
+					minIdx++;
+				}
+			}
+		}
+
+		return result;
+	}
+
+	int dificmaxproduce_xx_1(vector<int>& nums){
+		int tmpVal=1, maxVal = INT_MIN;
+		for(int i=0; i<nums.size(); i++){
+			tmpVal *= nums[i];
+			maxVal = max(maxVal, tmpVal);
+			if(tmpVal == 0)
+				tmpVal = 1;
+		}
+		return maxVal;
+	}
+
+
+
+	int bestwaytobuyandsale_xx_1(vector<int>& nums){
+		int minPrice = INT_MAX, maxPrice = INT_MIN, lastDay = -2, maxProfit=0;
+		bool buyFlat = false;
+		for(int i=0; i<nums.size(); i++){
+			if( (i-lastDay) > 1 && minPrice > nums[i] ){
+				minPrice = nums[i];
+				maxPrice = INT_MIN;
+				buyFlat = true;
+				continue;
+			}
+			if( buyFlat && (nums[i] > maxPrice || i == nums.size()-1)  ){
+				maxPrice = nums[i];
+				lastDay = i;
+			}else if(maxPrice > minPrice){
+				maxProfit += (maxPrice-minPrice);
+				minPrice = INT_MAX, maxPrice = INT_MIN;
+				buyFlat = false;
+			}
+		}
+		return maxProfit;
+	}
+
+	int minspit(int n, bool& m){
+		for(int i=1; i<=n; i++){
+			int val = i*i;
+			if( val == n ){
+				m = true;
+				return i;
+			}
+			else if(val > n){
+				m = false;
+				return i-1;
+			}
+		}
+	}
+
+	int mincountsum_x(int n){
+		bool m = false;
+		map<int, int> mincount;
+		for(int i=1; i<=n; i++){
+			int minspit = minspit(i, m);
+			if( m )
+				mincount[i] = 1;
+			else
+				mincount[i] = 0;
+		}
+		return mincount[n];
 	}
 }

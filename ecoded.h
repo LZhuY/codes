@@ -96,26 +96,24 @@ public:
 	}
 
 	int maxlengthkk(string s){
-		stack<char> sta;
+		stack<int> sta;
 		vector<int> idx(s.size(), 0);
 		int maxLen=0, tmpLen=0;
 		for(int i=0; i<s.size(); i++){
 			char c = s[i];
 			if( c == '(')
-				sta.push(c);
-			else if( c == ')' && sta.empty() ){
-			}else{
-				char lc = sta.top();
+				sta.push(-i);
+			else if( !sta.empty() ){
+				int tmp = sta.top();
 				sta.pop();
-				if( lc == '('){
-					idx[i] = 1;
-				}
+				idx[i] = 1;
+				idx[-tmp]=1;
 			}
 		}
 		for(int i=0; i<idx.size(); i++){
 			if(idx[i] == 1){
 				tmpLen++;
-				maxLen = max(maxLen,tmpLen*2);
+				maxLen = max(maxLen,tmpLen);
 			}else
 				tmpLen=0;
 		}
@@ -130,5 +128,10 @@ public:
 		return sums[r]-(l>0?s[l-1]:0);
 	}
 
-
+	int integerBreakerxx343(int n){
+		vector<int> maxm (n+1, 0);
+		for(int i=2; i<=n; i++){
+			maxm[i] = maxm[i];
+		}
+	}
 };

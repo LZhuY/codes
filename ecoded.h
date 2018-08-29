@@ -147,4 +147,58 @@ public:
 		}
 		return maxm[n];
 	}
+
+	// 0 <= i < 10^n
+	int countnumberwithuniquedigist357(int n){
+		if(n == 1)
+			return 10;
+		vector<int> dp(n, 0);
+		dp[0] = 1, dp[1]=10;
+		for(int i=2; i<=n; i++){
+			dp[i] = (10-1)*dp[i-1];
+		}
+		return dp[n];
+	}
+
+	int checkCountnumberwithuniquedigist357(int n){
+		int count = 0;
+		set<int> digits;
+		int maxNum = pow(10, n);
+		for(int i=0; i<maxNum; i++){
+			digits.clear();
+			int tmpNum = i;
+			if(tmpNum == 0){
+				count++;
+				continue;
+			}
+			bool diff = true;
+			while(tmpNum > 0){
+				int digit = tmpNum%10;
+				tmpNum = tmpNum/10;
+				auto res = digits.insert(digit);
+				if(!res.second){
+					diff = false;
+					break;
+				}
+			}
+			if(diff)
+				count++;
+		}
+		return count;
+	}
+
+	int taowamaxlevel(vector<pair<int,int>>& nums){
+		sort(nums.begin(), nums.end(), [](const pair<int,int>& a, const pair<int,int>& b){ return a.first*a.second > b.first*b.second; });
+		int maxLevel = 0;
+		vector<int> dp(nums.size(), 1);
+		for(int i=0; i<nums.size(); i++){
+			for(int j=i-1; j>=0; j--){
+				if(nums[i].first >= nums[j].first && nums[i].second >= nums[j].second){
+					dp[i] = max( dp[i], dp[j]+1 );
+					maxLevel = max(maxLevel, dp[i]);
+				}
+			}
+		}
+		return maxLevel;
+	}
 };

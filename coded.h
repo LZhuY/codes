@@ -279,5 +279,41 @@ public:
 			}
 		}
 		return dp[n];
-    }
+	}
+
+	vector<string> wordbreak140(string s, vector<string>& wordDick){
+		vector<string> results;
+		map<int, vector<vector<int>>> breakIndex;
+		vector<bool> dp(s.size()+1, false);
+		dp[0] = true;
+		for(int i=1; i<=s.size(); i++){
+			for(auto& tmp : wordDick){
+				int len = tmp.size();
+				if( i<len || !dp[i-len] || s.substr(i-len, len) != tmp )
+					continue;
+				dp[i] = true;
+				for( auto paths : breakIndex[i-len] ){
+					for(auto path : paths){
+						path.push_back(i);
+						breakIndex[i].push_back(path);
+					}
+				}
+			}
+		}
+		for(auto& paths : breakIndex){
+			for(auto& path : paths){
+				string tmpStr;
+				int lastIdx = 0;
+				for(auto idx : path){
+					if(idx ==0)
+						continue;
+					tmpStr.append(s.substr(lastIdx, idx));
+					tmpStr.append(' ');
+					lastIdx = idx;
+				}
+				results.push_back(tmpStr);
+			}
+		}
+		return results;
+	}
 };

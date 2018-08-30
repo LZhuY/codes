@@ -235,13 +235,34 @@ public:
 		nums[3]=std::pair<int,int>(2,1);
 		for(int i=4; i<=n; i++){
 			for(int j=1; j<=i-j; j++){
-				int tmp = j + max(nums[j-1].first, nums[i-j].first + nums[i-j].second*(j));
+				int tmp = j + nums[j-1].first + nums[i-j].first + nums[i-j].second*(j);
 				if(tmp < nums[i].first){
 					nums[i].first = tmp;
-					nums[i].second = nums[i-j].second + max(nums[j].second,1);
+					nums[i].second = nums[i-j].second + nums[j].second + 1;
 				}
 			}
 		}
 		return nums[n].first;
+	}
+
+	int minpathlen120x( vector<vector<int>>& trigle ){
+		int maxPath = 0;
+		for( int i=0; i<trigle.size(); i++ ){
+			for(int j=0; j<trigle[i].size(); j++){
+				trigle[i][j] = trigle[i][j] > 0 ? -trigle[i][j] : trigle[i][j];
+				int top = i-1, left = j-1, right = j;
+				if( top >= 0){
+					int tmp = trigle[i][j];
+					if(left >= 0 )
+						tmp = tmp+trigle[top][left];
+					if(right < trigle[top].size()){
+						tmp = min(tmp, trigle[i][j]+trigle[top][left]);
+					}
+					trigle[i][j] = tmp;
+					maxPath = min(maxPath, trigle[i][j]);
+				}
+			}
+		}
+		return maxPath*-1;
 	}
 };

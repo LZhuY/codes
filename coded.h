@@ -201,4 +201,27 @@ public:
 		}
 		return maxLevel;
 	}
+
+	vector<int> largestdiviablesubarray368(vector<int>& nums){
+		sort(nums.begin(), nums.end(), [](const int a, const int b){ return a<b; });
+		vector<vector<int>> results;
+		for(int i=0; i<nums.size(); i++){
+			bool bHit = false;
+			for(auto& item : results){
+				if( nums[i]%item.back() == 0 ){
+					bHit = true;
+					item.push_back(nums[i]);
+				}
+			}
+			if(!bHit){
+				results.push_back(vector<int>(1, nums[i]));
+			}
+		}
+		vector<int>* ptr = NULL;
+		for(auto& item : results){
+			if( ptr == NULL || ptr->size() < item.size() )
+				ptr = &item;
+		}
+		return *ptr;
+	}
 };

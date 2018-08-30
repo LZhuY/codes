@@ -224,4 +224,24 @@ public:
 		}
 		return *ptr;
 	}
+
+	int minicostjudegenum375(int n){
+		vector<pair<int,int>> nums(n+1, std::pair<int,int>(INT_MAX,0));
+		if(n <= 3) 
+			return n-1;
+		nums[0]=std::pair<int,int>(0,0);
+		nums[1]=std::pair<int,int>(0,0);
+		nums[2]=std::pair<int,int>(1,1);
+		nums[3]=std::pair<int,int>(2,1);
+		for(int i=4; i<=n; i++){
+			for(int j=1; j<=i-j; j++){
+				int tmp = j + max(nums[j-1].first, nums[i-j].first + nums[i-j].second*(j));
+				if(tmp < nums[i].first){
+					nums[i].first = tmp;
+					nums[i].second = nums[i-j].second + max(nums[j].second,1);
+				}
+			}
+		}
+		return nums[n].first;
+	}
 };

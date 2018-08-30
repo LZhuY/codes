@@ -265,4 +265,19 @@ public:
 		}
 		return maxPath*-1;
 	}
+
+	int wigglemaxlen376xx(vector<int>& nums){
+
+	}
+
+	int numTrees96(int n) { //G(n) = G(j-1)*G(n-j) (1<=j<=n)
+		vector<int> dp(n+1, 0);
+		dp[0]=dp[1]=1;
+		for(int i=2; i<=n; i++){
+			for(int j=1; j<=i; j++){
+				dp[i] += dp[j-1]*dp[i-j];
+			}
+		}
+		return dp[n];
+    }
 };

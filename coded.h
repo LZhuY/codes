@@ -423,4 +423,37 @@ public:
 		diffwaysumtotargetHelp(paths, nums, target, vector<int>(), 0);
 		return paths;
 	}
+
+	bool canPartitionKsubset698(vector<int>& nums, int k){
+		int totalSum = sum(nums.begin(), nums.end());
+		int eachSetSum = totalSum/k;
+		sort(nums.begin(), nums.end());
+		if(k > nums.size())
+			return false;
+		int cnt = 0;
+
+		while(true){
+			vector<int> sumPath(eachSetSum+1, -1);
+			sumPath[0] = 0;
+			for(int i=1; i<=eachSetSum; i++){
+				for(int j=0; j<nums.size(); j++){
+					int tmpVal = nums[j];
+					if(tmpVal != 0)
+						continue;
+					if( (i-tmpVal) >= 1 && sumPath[i-tmpVal] != -1 ){
+						sumPath[i] = i-tmpVal;
+					}
+				}
+			}
+			if(sumPath[eachSetSum] != -1){
+				int curIdx = sumPath[eachSetSum];
+				while(curIdx >= 1){
+					nums[curIdx] = 0;
+					curIdx = sumPath[curIdx];
+				}
+				cnt++;
+			}
+		}
+		return cnt == k;
+	}
 };

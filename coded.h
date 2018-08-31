@@ -380,4 +380,22 @@ public:
         m[visited] = false;
         return false;
     }
+
+	void findtargetsumwayHelp(int sum, vector<int>& nums, int idx, int target, int& cnt){
+		if(idx >= nums.size())
+			return;
+		if(sum + nums[idx] == target)
+			cnt++;
+		findtargetsumwayHelp(sum+nums[idx], nums, idx+1, target, cnt);
+
+		if(sum - nums[idx] == target)
+			cnt++;
+		findtargetsumwayHelp(sum-nums[idx], nums, idx+1, target, cnt);
+	}
+
+	int findtargetsumway494(vector<int>& nums, int target){ // dps
+		int cnt = 0;
+		findtargetsumwayHelp(0, nums, 0, target, cnt);
+		return cnt;
+	}
 };

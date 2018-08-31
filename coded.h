@@ -401,4 +401,26 @@ public:
 		findtargetsumwayHelp(0, nums, 0, target, cnt);
 		return cnt;
 	}
+
+	void diffwaysumtotargetHelp(vector<int, vector<vector<int>>>& paths, vector<int>& nums, int target, vector<int> path, int curSum){
+		if(curSum > target)
+			return;
+		for(int i=0; i<nums.size(); i++){
+			int tmpSum = curSum+nums[i];
+			if(tmpSum == target){
+				path.push_back(nums[i]);
+				paths.push_back(path);
+			}else if( tmpSum > target ){
+				continue;
+			}else{
+				diffwaysumtotargetHelp(paths, nums, target, path, tmpSum);
+			}
+		}
+	}
+
+	vector<vector<int>> diffwaysumtotarget(vector<int>& nums, int target){
+		vector<int, vector<vector<int>>> paths;
+		diffwaysumtotargetHelp(paths, nums, target, vector<int>(), 0);
+		return paths;
+	}
 };

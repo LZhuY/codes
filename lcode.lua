@@ -1,50 +1,42 @@
-
-function tbsize(tb)
-	local num = 0
+function tcopy(tb)
+	local tmp = {}
 	for k,v in pairs(tb) do
-		num = num + 1
-	end
-	return num
-end
-
-function tbsum(tb)
-	local sum = 0
-	for k,v in pairs(tb) do 
-		sum = sum + v
-	end
-	return sum
-end
-
-function fourSum1(result, nums, target)
-	local tmpMap={}
-	local sum = 0
-	local sz = #nums
-	for index1=1, sz-3 do
-		sum = nums[index1]
-		for index2=index1+1, sz-2 do
-			sum = sum + nums[index2]
-			for index3=index2+1, sz-1 do
-				sum = sum + nums[index3]
-				for index4=index3+1, sz do
-					sum = sum + nums[index4] 
-					if sum == target then
-						local tmp = {nums[index1], nums[index2], nums[index3], nums[index4]}
-						if not tmpMap[table.concat(tmp,"_")] then
-							table.insert(result, {nums[index1], nums[index2], nums[index3], nums[index4]})
-						end
-					end
-					sum = sum - nums[index4]
-				end
-				sum = sum - nums[index3]
-			end
-			sum = sum - nums[index2]
+		if type(v) == "number" then
+			tmp[k]=v
+		elseif type(v) == "table" then
+			tmp[k] = tcopy(v)
 		end
-		sum = 0
+	end
+	return tmp
+end
+
+function canwin464(maxNum, target)
+	local dp = {}
+	for i=1, maxNum do 
+		table.insert(dp, {val=i, use={[i]=i},idx={i}})
+	end
+	for i=1, target do
+		local tmp = {}
+		for k,v in pairs(dp) do
+			for j=1, maxNum do
+				if not v.use[j] then
+					local item = tcopy(v)
+					item.use[j] = j
+					item.val = item.val + j
+					table.insert(item.idx, j)
+					if item.val >= target then
+						return i%2, item
+					end
+					table.insert(tmp, item)
+				end
+			end
+		end
+		dp = tmp
 	end
 end
 
-result = {}
-fourSum1(result, {1,0,-1,0,-2,2}, 0)
-for k,v in pairs(result) do 
-	print(table.concat(v, " "))
+local res, item = canwin464(10, 19)
+print (res == 1 and "win" or "lose")
+for k,v in ipairs(item.idx) do 
+	print(k,v)
 end

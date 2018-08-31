@@ -316,4 +316,68 @@ public:
 		}
 		return results;
 	}
+
+	bool issubstring392(string s, string t){
+		int lastIdx = 0;
+		bool hit = false;
+		for(int i=0; i<s.size(); i++){
+			hit = false;
+			for(int j=lastIdx; j<t.size(); j++){
+				if(s[i] == t[j]){
+					lastIdx = j+1;
+					hit = true;
+					break;
+				}
+			}
+			if(!hit)
+				return false;
+		}
+		return true;
+	}
+
+    bool caniwin(int maxChoosableInteger, int desiredTotal) {
+        if (maxChoosableInteger >= desiredTotal) 
+        	return true;
+        if (maxChoosableInteger * (maxChoosableInteger + 1) / 2 < desiredTotal) 
+        	return false;
+        unordered_map<int, bool> m;
+        return canwin(maxChoosableInteger, desiredTotal, 0, m);
+    }
+    bool canwin(int length, int total, int used, unordered_map<int, bool>& m) {
+        if (m.count(used)) 
+        	return m[used];
+        for (int i = 0; i < length; ++i) {
+            int cur = (1 << i);
+            if ((cur & used) == 0) {
+                if (total <= i + 1 || !canwin(length, total - (i + 1), cur | used, m)) {
+                    m[used] = true;
+                    return true;
+                }
+            }
+        }
+        m[used] = false;
+        return false;
+    }
+
+    bool caniwin2(int maxChoosableInteger, int desiredTotal) {
+        maxn = maxChoosableInteger;
+        if(maxn >= desiredTotal) 
+        	return true;
+        if((1 + maxn) * maxn / 2 < desiredTotal)
+        	return false;
+        return canwin2(desiredTotal, 0, maxn);
+    }
+    bool canwin2(int target, int visited, int maxn) {
+        if(m.count(visited)) 
+        	return m[visited];
+        for(int i = 1; i <= maxn; i++) {
+            int mask = (1 << i); // 被动动数 << or >> 移动位数
+            if( (mask & visited) == 0 && (i >= target || canwin2(target - i, mask | visited, maxn) == false)) {
+                m[visited] = true;
+                return true;
+            }
+        }
+        m[visited] = false;
+        return false;
+    }
 };

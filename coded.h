@@ -418,7 +418,7 @@ public:
 		}
 	}
 
-	vector<vector<int>> diffwaysumtotarget(vector<int>& nums, int target){
+	vector<vector<int>> diffwaysumtotarget377(vector<int>& nums, int target){
 		vector<int, vector<vector<int>>> paths;
 		diffwaysumtotargetHelp(paths, nums, target, vector<int>(), 0);
 		return paths;

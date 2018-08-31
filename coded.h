@@ -384,6 +384,9 @@ public:
 	void findtargetsumwayHelp(int sum, vector<int>& nums, int idx, int target, int& cnt){
 		if(idx >= nums.size())
 			return;
+		int leftSum = sum( nums.begin()+idx, nums.end() );
+		if(sum + leftSum < target || sum - leftSum > target )
+			return;
 		if(sum + nums[idx] == target)
 			cnt++;
 		findtargetsumwayHelp(sum+nums[idx], nums, idx+1, target, cnt);

@@ -471,4 +471,49 @@ public:
         }
         return result;
     }
+
+    int besttimetobuyanssellI(vector<int>& prices){
+    	int len = prices.size();
+    	if(len <= 0)
+    		return 0;
+    	int minPrice = prices[0], maxProfit=0;
+    	for(int i=1; i<len; i++){
+    		maxProfit = max(maxProfit, prices[i]-minPrice);
+    		minPrice = min(minPrice, prices[i]);
+    	}
+    	return maxProfit;
+    }
+
+    int besttimetobuyanssellII(vector<int>& prices){
+    	int maxProfit=0;
+    	for(int i=1; i<prices.size(); i++){
+    		if(prices[i] > prices[i-1])
+    			maxProfit += (prices[i]-prices[i-1]);
+    	}
+    	return maxProfit;
+    }
+
+    //two
+    int besttimetobuyanssellIII(vector<int>& prices){
+    	int priceSize = prices.size();
+    	vector<int> posProfits(priceSize, 0);
+    	vector<int> nagProfits(priceSize, 0);
+    	int minPrice = prices[0];
+    	for(int i=1; i<priceSize; i++){
+    		posProfits[i] = max(posProfits, prices[i]-minPrice);
+    		minPrice = min(minPrice, prices[i]);
+    	}
+
+    	int maxPrice = prices[priceSize-1];
+    	for(int i=priceSize-2; i>=0; i--){
+    		nagProfits[i] = max(nagProfits[i], maxPrice-prices[i]);
+    		maxPrice = max(maxPrice, prices[i]);
+    	}
+
+    	int maxProfit = 0;
+    	for(int i=0; i<priceSize; i++){
+    		maxProfit = max(maxProfit, posProfits[i]+nagProfits[i]);
+    	}
+    	return maxProfit;
+    }
 };

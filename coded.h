@@ -516,4 +516,21 @@ public:
     	}
     	return maxProfit;
     }
+
+    //buy[i]  = max(rest[i-1] - price, buy[i-1]) 
+	//sell[i] = max(buy[i-1] + price, sell[i-1])
+	//rest[i] = max(sell[i-1], buy[i-1], rest[i-1])
+
+	//buy[i]  = max(sell[i-2]-price, buy[i-1])
+	//sell[i] = max(buy[i-1]+price, sell[i-1])
+	int maxProfitwithcooldown(vector<int>& prices) {
+		int buy = INT_MIN, pre_buy = 0, sell = 0, pre_sell = 0;
+		for (int price : prices) {
+			pre_buy = buy;
+			buy = max(pre_sell - price, pre_buy);
+			pre_sell = sell;
+			sell = max(pre_buy + price, pre_sell);
+		}
+		return sell;
+	}
 };

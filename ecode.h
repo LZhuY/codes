@@ -674,6 +674,12 @@ public:
 		return -1;
 	}
 
+	// jjabababcdabababca
+	//         abababca
+	//char:  | a | b | a | b | a | b | c | a |
+	//index: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 
+	//value: | 0 | 0 | 1 | 2 | 3 | 4 | 0 | 1 |
+	//next 数组各值的含义：代表当前字符之前的字符串中，有多大长度的相同前缀后缀。例如如果next [j] = k，代表j 之前的字符串中有最大长度为k 的相同前缀后缀。
 	vector<int> kmpProcess(string& needle) { //kmp next 
 		int n = needle.length();
 		vector<int> lps(n, 0);
@@ -689,7 +695,7 @@ public:
 		return lps;
 	}
 
-	int xx_kmpsearch_xx(string s, string t){
+	int xx_kmpsearch_xx(string s, string p){
 		int i = 0;
 		int j = 0;
 		int sLen = strlen(s);
@@ -704,9 +710,8 @@ public:
 			}
 			else
 			{
-				//②如果j != -1，且当前字符匹配失败（即S[i] != P[j]），则令 i 不变，j = next[j]    
-				//next[j]即为j所对应的next值      
-				j = next[j];
+				//②如果j != -1，且当前字符匹配失败（即S[i] != P[j]），则令 i 不变，j = next[j]   
+				j = next[j]; //当匹配失败时，模式串向右移动的位数为：失配字符所在位置 - 失配字符对应的next 值
 			}
 		}
 		if (j == pLen)
@@ -714,12 +719,6 @@ public:
 		else
 			return -1;
 	}
-
-	string countAndSay_xx(int n){
-
-	}
-
-
 
 	string longestCommonPrefix_xx_1(vector<string>& strs){
 		string common;

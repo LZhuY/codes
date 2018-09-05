@@ -563,4 +563,112 @@ public:
         }
         return res;
     }
+
+
+	void GetNextval(char* p, vector<int>& next)
+	{
+		int pLen = strlen(p);
+		next[0] = -1;
+		int k = -1;
+		int j = 0;
+		while (j < pLen - 1)
+		{
+			if (k == -1 || p[j] == p[k])
+			{
+				++j;
+				++k;
+				if (p[j] != p[k])
+					next[j] = k;
+				else
+					next[j] = next[k];
+			}
+			else
+			{
+				k = next[k];
+			}
+		}
+	}
+
+	bool ismatchpatter(string s, string p){
+		int sLen=s.size(), pLen = p.size();
+		vector<vector<bool>> dp(pLen, vector<bool>(sLen, false));
+		for(int i=0; i<pLen; i++){
+			for(int j=0; j<sLen; j++){
+				char c = p[i];
+				if( c == '*' ){
+					if(i == 0){
+						dp[i][j] = true;
+					}else if( j > 0 && i > 0 && dp[i-1][j-1] ){
+						dp[i][j] = true;
+					}
+				}else if( c == '.' ){
+					if( i > 0 && j > 0 ){
+						dp[i][j] = dp[i-1][j-1] ? true : false;
+					}
+				}else if( c == s[j]){
+					if(i>0 && j>0){
+						dp[i][j] = dp[i-1][j-1] ? true : false;
+					}
+				}
+			}
+		}
+		return dp[pLen-1][sLen-1];
+	}
+
+	int maxrangearea(vector<vector<int>>& matrix){
+		int row = matrix.size();
+		if(row <= 1)
+			return 0;
+		int cow = matrix[0].size();
+		if(cow <= 1)
+			return 0;
+		int maxArea = 0;
+		vector<vector<pair<int,int>>> cntMatrix(row, vector<pair<int,int>>(cow, {0,0}));
+		for(int i=0; i<row; i++){
+			for(int j=0; j<cow; j++){
+				pair<int,int>& point = cntMatrix[i][j];
+				if( matrix[i][j] == 0 ){
+					point.first = 0;
+					point.second = 0;
+				}else{
+					if(i>0 && j>0 && matrix[i-1][j-1]==1){
+						pair<int,int>& prePoint = cntMatrix[i-1][j-1];
+						point.first = prePoint.first+1;
+						point.second = prePoint.second+1;
+						maxArea = max(maxArea, point.first*point.second);
+					}else{
+						point.first = 1;
+						point.second = 1;
+					}
+				}
+			}
+		}
+		return maxArea;
+	}
+
+	bool istransstrHelp(string s, string rs){
+		int sLen = s.size();
+		int rsLen = s.size();
+		if(sLen != rsLen)
+			return false;
+		if(sLen <= 2){
+			return (s[0]==rs[0] && s[1]==rs[1]) || (s[1] == rs[0] && s[0]==rs[1]);
+		}
+		int sSum = 0, rsSum=0;
+		for(int i=0; i<sLen-1; i++){
+			sSum += s[i];
+			rsSum += rs[i];
+			if( sSum == rsSum ){
+				bool result = istransstrHelp(s.substr(0, i+1), rs.substr(0, i+1)) && istransstrHelp(s.substr(i+1, sLen), rs.substr(i+1, rsLen));
+				if(result)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	bool istransstr(string s, string rs){
+		bool result = istransstrHelp(s, rs);
+		return result;
+	}
 };

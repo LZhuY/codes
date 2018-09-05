@@ -651,9 +651,14 @@ public:
 		int rsLen = s.size();
 		if(sLen != rsLen)
 			return false;
-		if(sLen <= 2){
+		if(sLen == 2){
 			return (s[0]==rs[0] && s[1]==rs[1]) || (s[1] == rs[0] && s[0]==rs[1]);
 		}
+		if(sLen == 1){
+			return s[0] == rs[0];
+		}
+		if(sLen == 0)
+			return false;
 		int sSum = 0, rsSum=0;
 		for(int i=0; i<sLen-1; i++){
 			sSum += s[i];

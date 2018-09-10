@@ -1780,29 +1780,24 @@ public:
 		return mincount[n];
 	}
 
-	    public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
-        if (desiredTotal<=0) return true;
-        //如果1到最大能选的值所有和都不能满足目标值，那么肯定失败
-        if (maxChoosableInteger*(maxChoosableInteger+1)/2<desiredTotal) return false;
-        char state[] = new char[maxChoosableInteger];
-        for(int i=0;i<maxChoosableInteger;i++) state[i] = '0';
-        return dfs(desiredTotal, state, new HashMap<>());
-    }
-    private boolean dfs(int total, char[] state, HashMap<String, Boolean> hashMap) {
-        String key= new String(state);
-        if (hashMap.containsKey(key)) return hashMap.get(key);
-        for (int i=0;i<state.length;i++) {
-            if (state[i]=='0') {
-                state[i]='1';
-                if (total<=i+1 || !dfs(total-(i+1), state, hashMap)) {
-                    hashMap.put(key, true);
-                    state[i]='0';
-                    return true;
-                }
-                state[i]='0';
-            }
-        }
-        hashMap.put(key, false);
-        return false;
-    }
+	bool isscstrtree(string s, string p){ //字符转换
+		int sz = s.size();
+		if(sz != p.size())
+			return false;
+		if(sz == 0)
+			return true;
+		if(sz == 1)
+			return s[0] == p[0];
+		if(sz == 2)
+			return (s[0]==p[0] && s[1]==p[1]) || (s[0]==p[1] && s[1]==p[0]);
+		if(s == p)
+			return true;
+		for(int i=0;i<sz-1; i++){
+			bool res1 = isscstrtree( s.substr(0, i+1), p.substr(0, i+1) ) && isscstrtree( s.substr(i+1, sz-i-1), p.substr( i+1, sz-i-1 ) );
+			bool res2 = isscstrtree( s.substr(0, i+1), p.substr(sz-1-i, i+1)) && isscstrtree( s.substr(i+1, sz-i-1), p.substr(0, sz-i-1) );
+			if( res1 || res2  )
+				return true;
+		}
+		return false;
+	}
 }

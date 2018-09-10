@@ -1871,4 +1871,26 @@ public:
         }
         return nums[len];
     }
+
+	vector<string> splitstr140Help(vector<string>& dict, string s, int cidx, int sidx, vectot<string>& results){
+		vector<string> reuslts;
+		for(int i=idx; i<dict.size(); i++){
+			string& tmpStr = dict[i];
+			int tmpSize = tmpStr.size();
+			if(s.substr(0, tmpSize) == tmpStr){
+				if(s.size() == tmpSize){
+					results.push_back(s);
+				}else{
+					splitstr140Help(dict, s.substr(tmpSize-1, s.size()-tmpSize), 0);
+					splitstr140Help(dict, s, i);
+				}
+			}
+		}
+	}
+
+	vector<string> splitstr140(vector<string>& dict, string s){
+		vector<string> results;
+		splitstr140Help(dict, s, 0, 0, results);
+		return results;
+	}
 };

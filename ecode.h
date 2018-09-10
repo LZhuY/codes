@@ -1800,4 +1800,29 @@ public:
 		}
 		return false;
 	}
+
+	vector<TNode*> generateTreesHelp(int start, int end){
+		vector<TNode*> trees;
+		if( start > end ){
+			trees.push_back(NULL);
+			return trees;
+		}
+		for(int i=start; i<=end; i++){
+			vector<TNode*> left = generateTreesHelp(start, i-1);
+			vector<TNode*> right = generateTreesHelp(i+1, end);
+			for(auto lIter : left){
+				for(auto rIter : right ){
+					TNode* root = new TNode(i);
+					root->left = lIter; //auto aiter 与 vector<TNode*>::iterator iter 的区别 aiter == *iter
+					root->right = rIter;
+					trees.push_back(root);
+				}
+			}
+		}
+		return trees;
+	}
+
+	vector<TNode*> generateTrees(int n) { //不同的二叉查找树
+		return generateTreesHelp(1, n);
+	}
 }

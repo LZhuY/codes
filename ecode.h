@@ -1825,4 +1825,29 @@ public:
 	vector<TNode*> generateTrees(int n) { //不同的二叉查找树
 		return generateTreesHelp(1, n);
 	}
+
+	//动态规划：dp(i,j)表示S前i个字符串中T的前j个字符串出现的次数，那么 
+	//如果S[i]!=T[j]，则dp(i,j)=dp(i-1,j) 
+	//否则dp(i,j)=dp(i-1,j)+dp(i-1,j-1)
+	
+	int numDistinct(string s, string t) {
+		int sSize = s.size(), tSize = t.size();
+		vector< vector<int> > dp(sSize, vector<int>(tSize, 0));
+		for(int i=0; i<sSize; i++){
+			for(int j=0; j<tSize; j++){
+				if( s[i] != t[j] ){
+					if(i>0 && j>0)
+						dp[i][j] = dp[i-1][j-1];
+				}else{
+					if(i>0)
+						dp[i][j] = dp[i-1][j];
+					if(i>0 && j>0)
+						dp[i][j] += dp[i-1][j-1];
+					else if(j == 0)
+						dp[i][j] += 1;
+				}
+			}
+		}
+		return dp[sSize-1][tSize-1];
+	}
 }

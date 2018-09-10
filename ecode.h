@@ -1847,4 +1847,28 @@ public:
 		}
 		return dp[sSize-1][tSize-1];
 	}
-}
+
+
+	/*这种方法是以一个字符为中心，向两边扩展，如果是回文串就更新最小分割次数，
+	但是回文串可能是偶数个，也可能是奇数个。所以需要考虑以当前字符为中心，
+	或者以当前字符以及当前字符下一个字符共同为中心，进行两边扩展。如果为回文串，
+	则更新最小分割数 代码如下
+	*/
+    int minCut(string s) {
+        if(s.size()==0) 
+        	return 0;
+        int len=s.size();
+        vector<int> nums(len+1,0);
+        for(int i=0;i<=len;i++) 
+        	nums[i]=i-1;
+        for(int i=1; i<=len; i++){
+            for(int j=0; j<i && i+j<=len && s[i-j-1]==s[i+j-1]; j++){
+                nums[i+j]=min(nums[i+j], nums[i-j-1]+1);
+            }
+            for(int j=0; i-j>0 && i+j+1<=len && s[i-1]==s[i] && s[i-j-1]==s[i+j]; j++){
+                nums[i+j+1]=min(nums[i+j+1], nums[i-j-1]+1);
+            }
+        }
+        return nums[len];
+    }
+};

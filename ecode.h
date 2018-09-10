@@ -1893,4 +1893,9 @@ public:
 		splitstr140Help(dict, s, 0, 0, results);
 		return results;
 	}
+
+	/*
+	最大面积
+		maxArea = max(dp[i][j-1],dp[i-1][j],dp[i][j], dp[i][j]+dp[i][j-1], dp[i][j]+dp[i-1][j])
+	 */
 };

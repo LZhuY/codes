@@ -1913,7 +1913,7 @@ public:
 		dp[0] = 1;
 		for(int i=1; i<=target; i++){
 			for( auto iter : nums ){
-				if( i>iter ){
+				if( i>=iter ){
 					dp[i] += dp[i-iter];
 				}
 			}	
@@ -1924,21 +1924,44 @@ public:
 	int combnumoftarget377x(vector<int>& nums, int target){
 		vector<int> dp(target+1, 0);
 		dp[0] = 1;
+		map<int,int> tmpMap;
 		stack<int> sta;
-		for(auto iter : nums){
-			sta.push(iter);
-			dp[iter] = 1;
-		}
+		sta.push(0);
 		while( !sta.empty() ){
 			int tmpNum = sta.top();
 			sta.pop();
+			tmpMap[tmpNum] = 0;
 			for(auto iter : nums){
 				if(tmpNum+iter <= target){
 					dp[tmpNum+iter] += dp[tmpNum];
-					sta.push(tmpNum+iter);
+					if(tmpNum+iter < target){
+						int res = tmpMap[tmpNum+iter];
+						if(res == 0){
+							sta.push(tmpNum+iter);
+							tmpMap[tmpNum+iter] = 1;
+						}
+					}
 				}
 			}
 		}
 		return dp[target];
+	}
+
+	bool issubstring392(string s, string t){
+		int lastIdx = 0;
+		bool hit = false;
+		for(int i=0; i<s.size(); i++){
+			hit = false;
+			for(int j=lastIdx; j<t.size(); j++){
+				if(s[i] == t[j]){
+					lastIdx = j+1;
+					hit = true;
+					break;
+				}
+			}
+			if(!hit)
+				return false;
+		}
+		return true;
 	}
 };

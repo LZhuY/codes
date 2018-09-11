@@ -2088,5 +2088,30 @@ public:
 		vector<vector<int>> dp(sz, vector<int>(sz, 0));
 		return longestpalingHelp516(s, 0, s.size()-1, dp);
 	}
+
+
+
+	int longestpaling516_2(string str)
+	{
+		int sz = str.size();
+		vector<vector<int>> dp(sz, vector<int>(sz, 0));
+		int  tmp;
+		for (int i = 0; i < sz; ++i)
+			dp[i][i] = 1;
+	 
+		for (int i = 1; i < sz; ++i)
+		{
+			tmp = 0;
+			for (int j = 0; j + i < sz; j++) //所有长度为i+1的子串 [j][j+i]
+			{
+				if (str[j] == str[j + i])
+					tmp = dp[j + 1][j + i - 1] + 2;
+				else 
+					tmp = max(dp[j + 1][j + i], dp[j][j + i - 1]);
+				dp[j][j + i] = tmp;
+			}
+		}
+		return dp[0][sz - 1];
+	}
 };
  

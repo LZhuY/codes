@@ -2012,4 +2012,27 @@ public:
 		}
 		return true;
 	}
+
+	//dp[i][j] = Math.max(1 + dp[i-count[0]][j-count[1]], dp[i][j]);
+	int findmaxform474(vector<string>& strs, int m, int n){
+		vector<vector<int>> dp(m+1, vector<int>(n+1, 0));
+		for(auto str : strs){
+			map<char,int> counts = countchar(str);
+			for(int i=m; i>=counts['1']; i--){
+				for(int j=n; j>=counts['0']; j--){
+					dp[i][j] = max( dp[i][j], 1+dp[i-counts['1']][j-counts[j-counts['0']]] );
+				}
+			}
+		}
+		return dp[m][n];
+	}
+
+	map<char,int> countchar(string& str){
+		map<char, int> counts;
+		for(int i=0; i<str.size(); i++){
+			counts[str[i]]++;
+		}
+		return counts;
+	}
 };
+ 

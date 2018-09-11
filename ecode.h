@@ -2043,12 +2043,29 @@ public:
 			map<int, bool> tmpMap = sumMap;
 			for(auto tmp : tmpMap){
 				sumMap[tmp->first+num] = true;
-				if( (tmp->first+num)%k == 0)
+				if( (tmp->first+num) % k == 0)
 					return true;
 			}
 			sumMap[num] = true;
 		}
 		return false;
+	}
+
+	bool predictionwinerHelp486(vector<int>& nums, int sum1, int sum2,int left, int right, bool who){
+		if(right < left)
+			return sum1>sum2;
+		if(who){
+			bool left = predictionwinerHelp486(nums, sum1+nums[left], sum2, left+1, right, !who);
+			bool right = predictionwinerHelp486(nums, sum1+nums[right], sum2, right--, !who);
+			return left || right;
+		}else{
+			bool left = predictionwinerHelp486(nums, sum1, sum2+nums[left], left+1, right, !who);
+			bool right = predictionwinerHelp486(nums, sum1, sum2+nums[right], right--, !who);
+			return left||right;
+		}
+	}
+	bool predictionwiner486(vector<int>& nums){
+		return predictionwinerHelp486(nums, 0, 0, 0, nums.size()-1, true);
 	}
 };
  

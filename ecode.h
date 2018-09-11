@@ -1974,4 +1974,42 @@ public:
 		}
 		return sIdx == sSize;
 	}
+
+	int splitarray410(vector<int>& nums, int m){
+		int maxNum=0, sum=0;
+		for(auto iter : nums){
+			maxNum = max(maxNum, iter);
+			sum += iter;
+		}
+		int res = bindSearch410(nums, m, maxNum, sum);
+		return res;
+	}
+
+	long bindSearch410(vector<int>& nums, int m, long low, long height){
+		int res = height;
+		while( height > low ){
+			long mid = (low+height)/2;
+			if(isvalid410(nums, m, mid)){
+				low = mid;
+				res = mid;
+			}
+			else
+				low = mid;
+		}
+		return res;
+	}
+
+	bool isvalid410(vector<int>& nums, int m, int val){
+		int count=0, tmpSum=0;
+		for( int i=0; i<nums.size(); i++ ){
+			tmpSum += nums[i];
+			if(tmpSum >= val){
+				tmpSum = 0;
+				count ++;
+				if(count >= m && i < nums.size()-1)
+					return false;
+			}
+		}
+		return true;
+	}
 };

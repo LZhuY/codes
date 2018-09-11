@@ -2113,5 +2113,46 @@ public:
 		}
 		return dp[0][sz - 1];
 	}
+
+	void findpathsHelp576(int i, int j, int N, int& num, int MaxM, int MaxN){
+		if(N==1){
+			if(i==0 && j ==0){
+				num+=2;
+			}else if(i==0)
+				num++;
+			else if(j==0){
+				num++;
+			}
+			return;
+		}else if(N>1){
+			if(i==0 && j ==0){
+				num+=2;
+			}else if(i==0)
+				num++;
+			else if(j==0){
+				num++;
+			}
+
+			if(i>0){
+				findpathsHelp576(i-1, j, N-1, num, MaxM, MaxN);
+			}
+			if(j>0){
+				findpathsHelp576(i, j-1, N-1, num, MaxM, MaxN);
+			}
+			if(i<MaxM-1){
+				findpathsHelp576(i+1, j, N-1, num, MaxM, MaxN);
+			}
+			if(j<MaxN-1){
+				findpathsHelp576(i, j+1, N-1, num, MaxM, MaxN);
+			}
+		}
+	}
+
+	//10^9-7
+	int findpaths576(int m, int n, int N, int i, int j){
+		int num = 0;
+		findpathsHelp576(i, j, N, num, m, n);
+		return num;
+	}
 };
  

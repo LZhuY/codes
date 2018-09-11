@@ -2056,11 +2056,11 @@ public:
 			return sum1>sum2;
 		if(who){
 			bool left = predictionwinerHelp486(nums, sum1+nums[left], sum2, left+1, right, !who);
-			bool right = predictionwinerHelp486(nums, sum1+nums[right], sum2, right--, !who);
+			bool right = predictionwinerHelp486(nums, sum1+nums[right], sum2, right-1, !who);
 			return left || right;
 		}else{
 			bool left = predictionwinerHelp486(nums, sum1, sum2+nums[left], left+1, right, !who);
-			bool right = predictionwinerHelp486(nums, sum1, sum2+nums[right], right--, !who);
+			bool right = predictionwinerHelp486(nums, sum1, sum2+nums[right], right-1, !who);
 			return left||right;
 		}
 	}

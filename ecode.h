@@ -1898,4 +1898,47 @@ public:
 	最大面积
 		maxArea = max(dp[i][j-1],dp[i-1][j],dp[i][j], dp[i][j]+dp[i][j-1], dp[i][j]+dp[i-1][j])
 	 */
+	
+
+
+
+
+
+
+
+
+	int combnumoftarget377(vector<int>& nums, int target){
+		sort(nums.begin(), nums.end());
+		vector<int> dp(target+1, 0);
+		dp[0] = 1;
+		for(int i=1; i<=target; i++){
+			for( auto iter : nums ){
+				if( i>iter ){
+					dp[i] += dp[i-iter];
+				}
+			}	
+		}
+		return dp[target];
+	}
+
+	int combnumoftarget377x(vector<int>& nums, int target){
+		vector<int> dp(target+1, 0);
+		dp[0] = 1;
+		stack<int> sta;
+		for(auto iter : nums){
+			sta.push(iter);
+			dp[iter] = 1;
+		}
+		while( !sta.empty() ){
+			int tmpNum = sta.top();
+			sta.pop();
+			for(auto iter : nums){
+				if(tmpNum+iter <= target){
+					dp[tmpNum+iter] += dp[tmpNum];
+					sta.push(tmpNum+iter);
+				}
+			}
+		}
+		return dp[target];
+	}
 };

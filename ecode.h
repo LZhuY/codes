@@ -2034,5 +2034,21 @@ public:
 		}
 		return counts;
 	}
+
+	bool checksubarray523(vector<int>& nums, int k){
+		map<int, bool> sumMap;
+		for(auto num : nums){
+			if(num % k == 0)
+				return true;
+			map<int, bool> tmpMap = sumMap;
+			for(auto tmp : tmpMap){
+				sumMap[tmp->first+num] = true;
+				if( (tmp->first+num)%k == 0)
+					return true;
+			}
+			sumMap[num] = true;
+		}
+		return false;
+	}
 };
  

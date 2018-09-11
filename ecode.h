@@ -2067,5 +2067,26 @@ public:
 	bool predictionwiner486(vector<int>& nums){
 		return predictionwinerHelp486(nums, 0, 0, 0, nums.size()-1, true);
 	}
+
+
+
+	int longestpalingHelp516(string s, int left, int right, vector<vector<int>>& dp){
+		if(left>right)
+			return 0;
+		if(left == right)
+			return 1;
+		if(dp[left][right] != 0)
+			return dp[left][right];
+		if(s[left] == s[right]){
+			return longestpalingHelp516(s, left+1, right-1, dp)+2;
+		}else
+			return max(longestpalingHelp516(s, left, right-1, dp), longestpalingHelp516(s, left+1, right, dp));
+	}
+
+	int longestpaling516(string s){
+		int sz = s.size();
+		vector<vector<int>> dp(sz, vector<int>(sz, 0));
+		return longestpalingHelp516(s, 0, s.size()-1, dp);
+	}
 };
  

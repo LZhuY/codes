@@ -1964,4 +1964,14 @@ public:
 		}
 		return true;
 	}
+
+	bool issubstring392x(string s, string t){
+		int sIdx=0, tIdx=0, sSize=s.size(), tSize=t.size();
+		while(sIdx < sSize && tIdx < tSize){
+			if(s[sIdx] == t[tIdx])
+				sIdx++;
+			tIdx++;
+		}
+		return sIdx == sSize;
+	}
 };

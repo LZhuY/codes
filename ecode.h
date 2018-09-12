@@ -2178,5 +2178,28 @@ public:
 		}
 		return count;
 	}
+
+	int maxsumfortrangele363(vector<vector<int>>& matrix, int k){
+		int maxSum = 0;
+		int row = matrix.size();
+		if(row == 0)
+			return maxSum;
+		int cow = matrix[0].size();
+		row--, cow--;
+		vector<vector<int>> dp(row, vector<int>(cow, 0));
+		for(int i=1; i<=row; i++){
+			for(int j=1; j<=cow; j++){
+				int sSum = matrix[i-1][j-1]+matrix[i-1][j]+matrix[i][j]+matrix[i][j-1];
+				maxSum = max(maxSum, sSum);
+				if(i>1){
+					maxSum = max( maxSum, sSum+matrix[i-2][j]+matrix[i-2][j-1]);
+				}
+				if(j>1){
+					maxSum = max( maxSum, sSum+matrix[i][j-2]+matrix[i-1][j-2]);
+				}
+			}
+		}
+		return maxSum;
+	}
 };
  

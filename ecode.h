@@ -2154,5 +2154,29 @@ public:
 		findpathsHelp576(i, j, N, num, m, n);
 		return num;
 	}
+
+	bool ispalinValib(string& s, int start, int end){
+		if(start == end)
+			return true;
+		while( start < end ){
+			if(s[start] != s[end]){
+				return false;
+			}
+			start++;
+			end--;
+		}
+		return true;
+	}
+
+	int plindcount647(string s){
+		int count = 0;
+		for(int i=0; i<s.size(); i++){
+			for(int j=0; j<=s.size()-(i+1); j++){
+				if(ispalinValib(s, i, i+j))
+					count++;
+			}
+		}
+		return count;
+	}
 };
  

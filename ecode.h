@@ -2208,11 +2208,11 @@ public:
 		costs[from] = 0;
 		stack< int > points;
 		set<int> passPoints;
-		passPoints.insert(from);
 		points.push(from);
 		while( !points.empty() ){
 			int cur = points.top();
 			points.pop();
+			passPoints.insert(cur);
 			for(int i=0; i<cityNum; i++){
 				if(passPoints.find(i) != passPoints.end())
 					continue;

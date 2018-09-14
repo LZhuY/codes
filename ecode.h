@@ -2201,5 +2201,26 @@ public:
 		}
 		return maxSum;
 	}
+
+	int costminpath( vector<vector<int>>& citys, int from, int to ){
+		int cityNum = citys.size();
+		vector<int> costs(cityNum, -1);
+		costs[from] = 0;
+		stack< int > points;
+		points.push(from);
+		while( !points.empty() ){
+			int cur = points.top();
+			points.pop();
+			for(int i=cur+1; i<cityNum; i++){
+				if( cur == i )
+					continue;
+				if( citys[cur][i] == -1 )
+					continue;
+				points.push(i);
+				costs[i] = min(costs[i], costs[cur]+citys[cur][i]);
+			}
+		}
+		return costs[to];
+	}
 };
  

@@ -2224,5 +2224,44 @@ public:
 		}
 		return costs[to];
 	}
+
+	int theNoNugly264(int n){
+		vector<int> dp(n+1, 0);
+		dp[0] = 0, dp[1]=1, dp[2]=2, dp[3]=3, dp[4]=4, dp[5]=5, dp[6]=6, dp[7]=9;
+		return dp[n];
+	}
+
+	int findMax(vector<string>& strs, int m, int n){
+		int strSize = strs.size();
+		vector<vector<int>> prev(m+1, vector<int>(n+1, 0));
+		vector<vector<int>> curr(m+1, vector<int>(n+1, 0));
+		vector<pair<int, int>> zeroAndOne(strSize, pair<int,int>(0,0));
+		int zeroCnt=0, oneCnt=0;
+		for(int j=0; j<strSize; j++){
+			for(int i=0; i<str.size(); i++)
+				if(str[i] == '0')
+					zeroCnt++;
+				else
+					oneCnt++;
+			zeroAndOne[j] = pair<int,int>(zeroCnt, oneCnt);
+		}
+		for(int j=1; j<=strSize; j++){
+			for(int i=0; i<=m; i++){
+				for(int k=0; k<=n; k++){
+					zeroCnt = zeroAndOne[j-1].first, oneCnt = zeroAndOne[j-1].second;
+					if( i>=zeroCnt && k>=oneCnt ){
+						curr[i][k] = max(prev[i][k], prev[i-zerCnt][k-oneCnt]+1);
+					}else
+						curr[i][k] = prev[i][k];
+				}
+			}
+			for(int i=0; i<=m; i++){
+				for(int k=0; k<=n; k++){
+					prev[i][k] = curr[i][k];
+				}
+			}
+		}
+		return curr[m][n];
+	}
 };
  

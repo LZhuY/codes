@@ -676,4 +676,25 @@ public:
 		bool result = istransstrHelp(s, rs);
 		return result;
 	}
+
+	int uglyNum(int n){
+		vector<int> dp(n+1, 0);
+		dp[0] = 0, dp[1]=1, dp[2]=2, dp[3]=3, dp[4]=5;
+		
+		for(int i=5; i<=n; i++){
+			int minNum = INT_MAX;
+			for(int j=i-1; j>=1; j--){
+				int tmp2 = 2*dp[j];
+				int tmp3 = 3*dp[j];
+				int tmp5 = 5*dp[j];
+				if(tmp5 < dp[i-1])
+					break;
+				minNum = (tmp2 < minNum && tmp2 > dp[i-1]) ? tmp2 : minNum;
+				minNum = (tmp3 < minNum && tmp3 > dp[i-1]) ? tmp3 : minNum;
+				minNum = (tmp5 < minNum && tmp5 > dp[i-1]) ? tmp5 : minNum;
+			}
+			dp[i] = minNum;
+		}
+		return dp[n];
+	}
 };
